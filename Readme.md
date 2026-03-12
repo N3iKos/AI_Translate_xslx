@@ -52,10 +52,6 @@ Target OS:
 
 Universal Excel Translator
 
-Versi:
-
-v2.0
-
 ---
 
 # 3. Layout Aplikasi
@@ -94,27 +90,11 @@ Berisi 3 menu utama:
 - Translator
 - Chat
 - History
+- Api manager
 
 Fitur:
 
-Sidebar dapat di-resize.
-
-Jika diperkecil hingga minimum maka otomatis collapse menjadi **icon-only mode**.
-
-Mode:
-
-Expanded:
-
-Icon + Text
-
-Collapsed:
-
-Icon saja.
-
-Lebar minimum:
-
-48px.
-
+Sidebar fixed icon-only .
 ---
 
 # 5. Main Content Panel
@@ -124,6 +104,7 @@ Konten berubah berdasarkan tab.
 Tab yang tersedia:
 
 - Translator
+- Api Manager
 - Chat
 - History
 
@@ -131,7 +112,7 @@ Tab yang tersedia:
 
 # 6. Sidebar Kanan (Preview File)
 
-Panel ini menampilkan **preview spreadsheet interaktif**.
+Panel ini menampilkan **preview spreadsheet realtime interaktif**.
 
 Fitur:
 
@@ -161,6 +142,8 @@ Tambahkan search bar untuk filter baris.
 
 Terminal log untuk proses aplikasi.
 
+untuk panel log terminal bisa di atur untuk ukurannya tinggal di geser ke atas
+
 Jenis log:
 
 INFO
@@ -188,14 +171,16 @@ Provider selector
 API key management  
 Model selector  
 Operation mode  
-File input  
+File input Bisa drag and drop, atau tekan tombol file untuk membuka file.
 Column picker  
 Language configuration  
-Style preset  
+Style preset Prompt
+Custom Prompt ( jadi nanti ada 2 text box yang 1 itu text box untuk prompt, dan selanjutnya custom prompt untuk repair
 Batch configuration  
 Thread configuration  
 Retry configuration  
-Temperature control  
+Temperature control
+max completion tokens control
 Algorithm selector  
 Action buttons
 
@@ -205,15 +190,9 @@ Action buttons
 
 Aplikasi harus mendukung berbagai provider:
 
-- OpenAI
-- Anthropic
 - Google Gemini
 - Groq
 - Cerebras
-- OpenRouter
-- Together AI
-- DeepSeek
-- Mistral
 
 Fitur:
 
@@ -239,17 +218,12 @@ Vault harus dilindungi oleh **master password**.
 
 Alur:
 
-Pertama kali:
-
-User membuat master password.
-
-Selanjutnya:
-
-User membuka vault dengan password.
+Jika user baru membuat programnya, maka akan di tampilkan tampila, untuk seperti daftar profil dan memasukan username dan password, untuk password itu bisa di hide/show toggle jika mau bisa menambahkan foto profil dan bisa cut foto profil dari programnya, jika user sudah mendaftar nanti muncul profil baru user yang sudah di daftarkan yang tersimpan di vault. dan user bisa menambahkan profil lagi jika mau, dan jika user mauu login tingal klik profil user yang sudah di daftarkan.
 
 Vault menyimpan:
 
 - Provider
+- Data profil
 - API key
 
 ---
@@ -366,7 +340,7 @@ Konfigurasi:
 
 ---
 
-# 19. Temperature Control
+# 19. LLM Control
 
 Slider:
 
@@ -400,8 +374,8 @@ Enter / Shift+Enter behavior dapat dikonfigurasi.
 Tambahkan pengaturan:
 
 - Temperature
-- Top-P
-- Context length
+- max completion tokens control
+- Reasoning control low, medium, high ( karena gak semua model memiliki maka di buat dinamis deteksi otomatis jika model yang di pilih ada ini )
 - System prompt
 - Custom instructions
 
@@ -433,7 +407,8 @@ Yang disimpan:
 - batch settings
 - temperature
 
-API key tidak ikut disimpan.
+tersimpan bersamaan di dalam folder pada saat user mendaftar, dan bisa new save gitu 
+
 
 ---
 
@@ -448,69 +423,6 @@ Default:
 
 Auto detect dari sistem.
 
----
-
-# 25. Struktur Project
-
-Gunakan struktur modular seperti berikut:
-
-```
-UniversalExcelTranslator/
-
-Core/
-Services/
-Providers/
-Vault/
-Models/
-
-UI/
-Views/
-ViewModels/
-Controls/
-
-Styles/
-Themes/
-
-Data/
-History/
-
-Program.cs
-App.axaml
-```
-
-Gunakan **MVVM pattern**.
-
----
-
-# 26. Tahapan Implementasi
-
-Implementasikan bertahap:
-
-Phase 1  
-Core translation engine
-
-Phase 2  
-Provider system
-
-Phase 3  
-Vault encryption
-
-Phase 4  
-GUI layout
-
-Phase 5  
-File preview
-
-Phase 6  
-Chat system
-
-Phase 7  
-History
-
-Phase 8  
-Packaging
-
----
 
 # 27. Standar Kode
 
@@ -520,8 +432,6 @@ Kode harus:
 - readable
 - maintainable
 - menggunakan MVVM
-
-Hindari file besar yang monolithic.
 
 ---
 
