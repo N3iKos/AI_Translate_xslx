@@ -1,81 +1,53 @@
-# Prompt Pengembangan Aplikasi  
-## Universal Excel Translator Desktop App
+# Universal Excel Translator
+## Product Design & Feature Specification
 
-Anda adalah **Senior Software Engineer** yang ahli dalam pengembangan aplikasi desktop menggunakan **C# dan Avalonia UI**.
+Dokumen ini berisi konsep desain aplikasi desktop untuk melakukan **translasi file Excel/CSV menggunakan LLM**.
 
-Tugas Anda adalah **mendesain dan mengimplementasikan aplikasi desktop profesional** untuk menerjemahkan file Excel/CSV menggunakan berbagai API LLM.
+Fokus utama adalah **UI/UX yang cepat, intuitif, dan efisien untuk workflow translasi data spreadsheet**.
 
-Aplikasi ini merupakan **port dari konsep aplikasi Python sebelumnya**, tetapi harus diimplementasikan ulang menggunakan:
-
-- **C#**
-- **.NET 8**
-- **Avalonia UI**
-
-Aplikasi harus memiliki arsitektur yang **bersih, modular, scalable, dan production-ready**.
-
-JANGAN menyederhanakan fitur kecuali diminta.
+Dokumen ini hanya menjelaskan **konsep aplikasi dan pengalaman pengguna**, tanpa menentukan teknologi implementasi.
 
 ---
 
-# 1. Tech Stack
+# 1. Tujuan Aplikasi
 
-Gunakan teknologi berikut:
+Aplikasi ini bertujuan untuk membantu pengguna menerjemahkan data spreadsheet secara cepat menggunakan LLM.
 
-Core:
+Target workflow utama:
 
-- C#
-- .NET 8
-- Avalonia UI
-- MVVM Pattern
+1. Load file spreadsheet
+2. Pilih kolom sumber
+3. Pilih kolom hasil terjemahan
+4. Jalankan translasi
+5. Download hasil
 
-Library yang direkomendasikan:
-
-- ClosedXML (Excel)
-- CsvHelper
-- RestSharp / HttpClient
-- Newtonsoft.Json atau System.Text.Json
-- Polly (retry handling)
-- LiteDB atau SQLite untuk history
-
-Packaging:
-
-- Publish sebagai **single executable**
-
-Target OS:
-
-- Windows (utama)
-- tetapi tetap cross-platform karena Avalonia
+Semua proses harus dapat dilakukan dengan **interaksi seminimal mungkin**.
 
 ---
 
-# 2. Nama Aplikasi
+# 2. Konsep UI Utama
 
-Universal Excel Translator
+Desain UI mengikuti gaya **modern developer tools**.
 
----
-
-# 3. Layout Aplikasi
-
-Gunakan layout modern seperti developer tools.
-
-Struktur layout utama:
+Layout utama terdiri dari tiga area:
 
 ```
-[Sidebar Kiri] | [Main Content] | [Sidebar Kanan]
+Sidebar | Main Panel | File Preview
 ```
 
 Dengan panel log di bagian bawah.
 
 ```
 ┌─────────────────────────────────────────────┐
-│ Universal Excel Translator v2.0             │
+│ Universal Excel Translator                  │
 ├──────────┬─────────────────────┬────────────┤
-│ Sidebar  │ Main Content        │ Preview    │
-│ Kiri     │                     │ File       │
+│ Sidebar  │ Main Panel          │ File       │
+│          │                     │ Preview    │
 │          │                     │            │
-│Trans     │ Translator / Chat   │ Table      │
+│Trans     │ Settings / Chat     │ Table      │
 │Chat      │ / History           │ Preview    │
 │Hist      │                     │            │
+│ApiMgr    │                     │            │
 ├──────────┴─────────────────────┴────────────┤
 │ Log Terminal                                │
 └─────────────────────────────────────────────┘
@@ -83,276 +55,191 @@ Dengan panel log di bagian bawah.
 
 ---
 
-# 4. Sidebar Kiri
+# 3. Sidebar Navigasi
 
-Berisi 3 menu utama:
-
-- Translator
-- Chat
-- History
-- Api manager
-
-Fitur:
-
-Sidebar fixed icon-only .
----
-
-# 5. Main Content Panel
-
-Konten berubah berdasarkan tab.
-
-Tab yang tersedia:
+Sidebar berisi menu utama aplikasi:
 
 - Translator
-- Api Manager
+- API Manager
 - Chat
 - History
 
----
+Karakteristik sidebar:
 
-# 6. Sidebar Kanan (Preview File)
+- icon-only
+- minimalis
+- selalu terlihat
+- tidak collapsible
 
-Panel ini menampilkan **preview spreadsheet realtime interaktif**.
-
-Fitur:
-
-- Menampilkan hingga 1000 baris pertama
-- Nomor baris
-- Scroll horizontal
-- Header kolom clickable
-
-Klik header kolom untuk assign role:
-
-- Source Column
-- Translated Column
-- Repair Column
-- Context Column
-
-Header preview menampilkan:
-
-- Nama file
-- Tombol fullscreen
-- Tombol download
-
-Tambahkan search bar untuk filter baris.
+Tujuannya agar navigasi cepat dan tidak mengganggu workspace utama.
 
 ---
 
-# 7. Panel Bawah (Log Terminal)
+# 4. File Preview Panel
 
-Terminal log untuk proses aplikasi.
+Panel kanan menampilkan **preview spreadsheet secara realtime**.
 
-untuk panel log terminal bisa di atur untuk ukurannya tinggal di geser ke atas
+Preview ini merupakan komponen utama UI.
+
+Fitur utama:
+
+- menampilkan hingga 1000 baris
+- scroll horizontal
+- nomor baris
+- header kolom interaktif
+
+---
+
+# 5. Interaksi Kolom (Fitur UX Paling Penting)
+
+Pengguna **tidak memilih kolom dari dropdown**.
+
+Sebaliknya, pengguna **langsung klik header kolom pada tabel**.
+
+Saat header kolom diklik, muncul menu kecil:
+
+```
+Set Column Role
+• Source Column
+• Translation Column
+• Context Column
+• Repair Column
+```
+
+Setelah dipilih, kolom akan memiliki **indikator visual**.
+
+Contoh:
+
+```
+Column B → Source
+Column C → Translation
+Column D → Context
+```
+
+Kolom yang dipilih harus:
+
+- diberi warna
+- memiliki label kecil di header
+
+Tujuan UX ini adalah agar workflow terasa seperti menggunakan spreadsheet.
+
+---
+
+# 6. Indicator Role Kolom
+
+Di atas tabel ditampilkan ringkasan role kolom.
+
+Contoh:
+
+```
+Source: B
+Translation: C
+Context: D
+Repair: E
+```
+
+User juga dapat mengubahnya secara manual.
+
+---
+
+# 7. Panel Log
+
+Panel bawah menampilkan log proses.
+
+Karakteristik:
+
+- dapat di-resize
+- auto-scroll
+- warna log berbeda
 
 Jenis log:
 
-INFO
-SUCCESS
-WARNING
-ERROR
+INFO  
+SUCCESS  
+WARNING  
+ERROR  
 
-Tambahkan:
-
-- progress bar
-- tombol clear log
-- toggle auto-scroll
-
-Gunakan font monospace.
+Tambahkan progress bar untuk batch process.
 
 ---
 
 # 8. Tab Translator
 
-Form pengaturan utama.
+Tab ini berisi pengaturan utama proses translasi.
 
-Berisi:
+Komponen utama:
 
 Provider selector  
-API key management  
+API key selector  
 Model selector  
-Operation mode  
-File input Bisa drag and drop, atau tekan tombol file untuk membuka file.
-Column picker  
-Language configuration  
-Style preset Prompt
-Custom Prompt ( jadi nanti ada 2 text box yang 1 itu text box untuk prompt, dan selanjutnya custom prompt untuk repair
-Batch configuration  
-Thread configuration  
+
+File input
+
+File input mendukung:
+
+- drag and drop
+- file picker
+
+Column configuration
+
+Language configuration
+
+Prompt configuration
+
+Terdapat dua jenis prompt:
+
+1. Translation Prompt
+2. Repair Prompt
+
+Pengaturan tambahan:
+
+Batch size  
+Thread count  
 Retry configuration  
-Temperature control
-max completion tokens control
-Algorithm selector  
-Action buttons
+
+LLM parameters:
+
+Temperature  
+Max completion tokens
 
 ---
 
-# 9. Provider LLM
+# 9. Mode Operasi
 
-Aplikasi harus mendukung berbagai provider:
+Mode yang tersedia:
 
-- Google Gemini
-- Groq
-- Cerebras
+Translate
 
-Fitur:
+Translate + Context
 
-User memasukkan API key.
+Repair
 
-Aplikasi mengambil **model list dari API provider secara otomatis**.
-
-Dropdown model diperbarui secara dinamis.
+Repair digunakan untuk memperbaiki hasil translasi yang gagal.
 
 ---
 
-# 10. Sistem Penyimpanan API Key
-
-API key harus disimpan secara **terenkripsi**.
-
-Gunakan sistem vault:
-
-```
-keys.enc
-```
-
-Vault harus dilindungi oleh **master password**.
-
-Alur:
-
-Jika user baru membuat programnya, maka akan di tampilkan tampila, untuk seperti daftar profil dan memasukan username dan password, untuk password itu bisa di hide/show toggle jika mau bisa menambahkan foto profil dan bisa cut foto profil dari programnya, jika user sudah mendaftar nanti muncul profil baru user yang sudah di daftarkan yang tersimpan di vault. dan user bisa menambahkan profil lagi jika mau, dan jika user mauu login tingal klik profil user yang sudah di daftarkan.
-
-Vault menyimpan:
-
-- Provider
-- Data profil
-- API key
-
----
-
-# 11. Mode Operasi
-
-Mode yang harus didukung:
-
-### Translate
-
-Terjemahan dasar.
-
-### Translate + Context
-
-Menggunakan kolom context.
-
-### Repair
-
-Memperbaiki hasil terjemahan yang rusak.
-
----
-
-# 12. Format File
+# 10. Format File
 
 Input:
 
 - XLSX
 - CSV
 
-Jika CSV:
+Jika CSV dimuat, sistem akan memprosesnya seperti spreadsheet.
 
-konversi internal ke struktur Excel.
-
-Output:
-
-Selalu membuat file baru:
+Output selalu berupa file baru.
 
 ```
-nama_file_translated.xlsx
+original_filename_translated.xlsx
 ```
 
 ---
 
-# 13. Column Picker
+# 11. Chat Interface
 
-User dapat menentukan:
+Aplikasi juga menyediakan tab chat untuk berinteraksi langsung dengan LLM.
 
-Source column  
-Translated column  
-Repair column  
-Context column
-
-Kolom bisa dipilih dengan:
-
-- mengetik huruf kolom
-- klik header pada preview
-
----
-
-# 14. Language Configuration
-
-Contoh:
-
-EN → ID  
-JP → EN  
-AUTO → EN
-
-Gunakan deteksi bahasa otomatis jika diperlukan.
-
----
-
-# 15. Style Preset
-
-Preset:
-
-- Neutral
-- Formal
-- Casual
-- Marketing
-- Technical
-- Academic
-
-Preset memodifikasi prompt terjemahan.
-
----
-
-# 16. Batch Processing
-
-Pengaturan:
-
-- range baris
-- batch size
-- delay antar batch
-- skip baris yang sudah terisi
-
----
-
-# 17. Multi Thread
-
-User dapat menentukan jumlah thread per API key.
-
----
-
-# 18. Retry System
-
-Jika gagal:
-
-retry otomatis.
-
-Konfigurasi:
-
-- retry limit
-- backoff delay
-
----
-
-# 19. LLM Control
-
-Slider:
-
-0.0 – 1.0
-
-Menampilkan nilai realtime.
-
----
-
-# 20. Tab Chat
-
-Chat interface seperti ChatGPT.
+UI chat menyerupai chat modern.
 
 Fitur:
 
@@ -361,90 +248,108 @@ Fitur:
 - code block
 - tombol copy
 
-Navigasi percakapan.
-
-Input chat:
-
-Enter / Shift+Enter behavior dapat dikonfigurasi.
+Pengguna dapat mengatur parameter LLM secara langsung.
 
 ---
 
-# 21. Chat Advanced Settings
+# 12. History
 
-Tambahkan pengaturan:
-
-- Temperature
-- max completion tokens control
-- Reasoning control low, medium, high ( karena gak semua model memiliki maka di buat dinamis deteksi otomatis jika model yang di pilih ada ini )
-- System prompt
-- Custom instructions
-
----
-
-# 22. History Tab
-
-Menyimpan history proses translate.
+Tab history menyimpan aktivitas translasi.
 
 Menampilkan:
 
 - timestamp
 - nama file
 - mode
-- statistik
+- jumlah baris berhasil
+- jumlah gagal
+
+History dapat digunakan untuk memuat ulang konfigurasi.
 
 ---
 
-# 23. Save / Load Config
+# 13. API Manager
 
-User dapat menyimpan konfigurasi ke file JSON.
+Panel untuk mengelola API key.
 
-Yang disimpan:
+Fitur:
+
+- tambah API key
+- edit API key
+- hapus API key
+
+API key disimpan secara terenkripsi.
+
+---
+
+# 14. Sistem Profil User
+
+Aplikasi mendukung beberapa profil pengguna.
+
+Saat pertama kali membuka aplikasi:
+
+pengguna membuat profil.
+
+Profil berisi:
+
+- username
+- password
+- foto profil
+- konfigurasi aplikasi
+- API key
+
+Pengguna dapat memilih profil saat login.
+
+---
+
+# 15. Save Configuration
+
+Pengguna dapat menyimpan konfigurasi translasi.
+
+Konfigurasi yang disimpan:
 
 - provider
 - model
-- column config
-- language
+- kolom
+- bahasa
 - batch settings
-- temperature
+- prompt
 
-tersimpan bersamaan di dalam folder pada saat user mendaftar, dan bisa new save gitu 
-
+Config disimpan dalam folder profil user.
 
 ---
 
-# 24. Theme
+# 16. Theme
 
-Aplikasi harus mendukung:
+Aplikasi mendukung:
 
 Dark mode  
 Light mode
 
-Default:
-
-Auto detect dari sistem.
-
-
-# 27. Standar Kode
-
-Kode harus:
-
-- modular
-- readable
-- maintainable
-- menggunakan MVVM
+Default mengikuti sistem.
 
 ---
 
-# 28. Output Yang Diminta
+# 17. Prinsip Desain UI
 
-AI harus menghasilkan:
+UI harus mengikuti prinsip:
 
-1. Arsitektur project
-2. Struktur folder lengkap
-3. Penjelasan komponen utama
-4. Contoh implementasi class penting
-5. Contoh UI Avalonia
-6. Contoh ViewModel
-7. Contoh service API provider
+- minimal friction
+- spreadsheet-first workflow
+- fast column selection
+- minimal dropdown usage
+- visual feedback yang jelas
 
-```
+Tujuan utama adalah membuat workflow translasi terasa seperti bekerja langsung di spreadsheet.
+
+---
+
+# 18. Output yang Diharapkan dari AI
+
+AI diminta menghasilkan:
+
+1. Arsitektur aplikasi
+2. Struktur folder project
+3. Desain komponen UI
+4. Diagram alur interaksi user
+5. Contoh implementasi komponen utama
