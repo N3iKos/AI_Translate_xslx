@@ -344,9 +344,9 @@ Tujuan utama adalah membuat workflow translasi terasa seperti bekerja langsung d
 
 ---
 
-# 18. Output yang Diharapkan dari AI
+# 18. Output yang Diharapkan
 
-AI diminta menghasilkan:
+ diminta menghasilkan:
 
 1. Arsitektur aplikasi
 2. Struktur folder project
